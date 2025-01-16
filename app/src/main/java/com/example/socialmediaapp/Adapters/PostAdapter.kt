@@ -46,13 +46,11 @@ class PostAdapter(
             Glide.with(holder.itemView.context)
                 .load(it.imageUrl)
                 .into(holder.postImage)
+
+            Glide.with(holder.itemView.context)
+                .load(userWithPost.user.profileImageUrl)
+                .into(holder.profileImage)
         }
-
-
-
-
-
-
     }
     fun updateData(newList : List<UserWithPosts>) {
         posts.clear()

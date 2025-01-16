@@ -59,6 +59,15 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <ImageView
+        android:id="@+id/profile_image_Chooser"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:src="@drawable/logo"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"/>
+
+
     <Button
         style="@style/Widget.Material3.Button.ElevatedButton"
         android:id="@+id/register_button"

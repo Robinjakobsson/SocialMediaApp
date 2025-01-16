@@ -24,12 +24,11 @@ class FireBaseStorage {
 
 
     private val _userWithPosts = MutableLiveData<List<UserWithPosts>?>()
-    val userWithPosts : MutableLiveData<List<UserWithPosts>?> get() = _userWithPosts
+    val userWithPosts: MutableLiveData<List<UserWithPosts>?> get() = _userWithPosts
 
     init {
         postsListener()
     }
-
 
     fun uploadPost(imageUri: Uri,caption : String) {
         val imageFileName = "posts/${UUID.randomUUID()}.jpg"
