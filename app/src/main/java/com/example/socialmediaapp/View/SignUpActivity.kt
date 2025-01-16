@@ -1,10 +1,12 @@
 package com.example.socialmediaapp.View
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -16,6 +18,7 @@ import com.example.socialmediaapp.databinding.ActivitySignUpBinding
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding : ActivitySignUpBinding
     private lateinit var auth: AuthViewModel
+    private var selectedImageUri : Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -28,6 +31,16 @@ class SignUpActivity : AppCompatActivity() {
             insets
         }
         binding.registerButton.setOnClickListener { register() }
+
+        val pickImageLauncher =
+            registerForActivityResult(ActivityResultContracts.GetContent()) {uri : Uri? ->
+                if (uri != null) {
+                    selectedImageUri = uri
+                    binding.profileImageChooser.setImageURI(selectedImageUri)
+                }
+            }
+
+        binding.profileImageChooser.setOnClickListener { pickImageLauncher.launch("image/*") }
 
 
     }
@@ -55,9 +68,8 @@ class SignUpActivity : AppCompatActivity() {
             Toast.makeText(this,"Enter a username!",Toast.LENGTH_SHORT).show()
             return
         }else {
-
-            auth.createAccount(email, password, username, "")
             binding.loginProgressBar.visibility = View.GONE
+            selectedImageUri?.let { auth.createAccount(email, password, username, it) }
             Toast.makeText(this, "Account with $username Created!", Toast.LENGTH_SHORT).show()
             finish()
 

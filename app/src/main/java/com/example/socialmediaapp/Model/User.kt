@@ -1,6 +1,6 @@
 package com.example.socialmediaapp.Model
 
-class User(
+data class User(
     val username : String = "",
     val userid : String = "",
     val profileImageUrl : String = "",
