@@ -37,7 +37,8 @@ class LoginActivity : AppCompatActivity() {
         val email = binding.emailEditText.text.toString()
         val password = binding.passwordEditText.text.toString()
 
-        binding.loginButton.visibility = View.VISIBLE
+        binding.loginProgressBar.visibility = View.VISIBLE
+
 
         if (email.isEmpty() || password.isEmpty()){
             Toast.makeText(this,"All fields are required!", Toast.LENGTH_SHORT).show()
@@ -52,9 +53,15 @@ class LoginActivity : AppCompatActivity() {
             return
         }else {
 
-            auth.signIn(email, password)
-            binding.loginButton.visibility = View.GONE
-            navigateToPostsActivity()
+            auth.signIn(email,password, onsuccess = {
+                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                navigateToPostsActivity()
+                binding.loginProgressBar.visibility = View.GONE
+            }, onFailure = {
+                binding.loginProgressBar.visibility = View.GONE
+                Toast.makeText(this,"Login Failed!",Toast.LENGTH_SHORT).show()
+            })
+
         }
     }
 

@@ -18,7 +18,7 @@ class FireBaseAuth {
     val auth = Firebase.auth
     private val db = FireBaseDatabase()
 
-    fun createAccount(email: String, password: String, username: String, imageUri: Uri) {
+    fun createAccount(email: String, password: String, username: String, imageUri: Uri, onsuccess: () -> Unit,onFailure: (Exception) -> Unit) {
         // Skapa en referens för profilbilden i Firebase Storage
         val profileImageRef = storage.reference.child("profile_images/${UUID.randomUUID()}.jpg")
 
@@ -37,11 +37,25 @@ class FireBaseAuth {
                                 val uid = currentUser?.uid
 
                                 if (uid != null) {
-                                    // Lägg till användaren i databasen
+                                    Log.d(
+                                        "FireBaseAuth",
+                                                "User ${auth.currentUser?.email} created successfully"
+                                    )
                                     db.addUser(username, uid, downloadUrl.toString())
+                                    onsuccess()
                                 }
                             } else {
-                                Log.d("FireBaseAuth", "User $username Not Created.")
+                                val errorMessage = when (val error = task.exception) {
+                                    is FirebaseAuthInvalidCredentialsException -> "Invalid email or password"
+                                    is FirebaseAuthUserCollisionException -> "This email is already registered"
+                                    else -> error?.localizedMessage
+                                        ?: "Sign in failed. Please try again"
+                                }
+                                Log.d(
+                                    "FireBaseAuth",
+                                    "User sign in failed ${task.exception?.message}"
+                                )
+                                onFailure(Exception(errorMessage))
                             }
                         }
                 }.addOnFailureListener { e ->
@@ -55,16 +69,23 @@ class FireBaseAuth {
             }
     }
 
-    fun signIn(email : String, password: String) {
+    fun signIn(email : String, password: String, onsuccess: () -> Unit, onFailure : (Exception) -> Unit) {
         auth.signInWithEmailAndPassword(email,password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     if (user != null) {
                         Log.d("FireBaseAuth","User ${auth.currentUser} signed in Successfully!")
+                        onsuccess()
                     }
                 }else {
-                    Log.d("FireBaseAuth","Login Failed")
+                    val errorMessage = when (val error = task.exception) {
+                        is FirebaseAuthInvalidCredentialsException -> "Invalid email or password"
+                        is FirebaseAuthUserCollisionException -> "This email is already registered"
+                        else -> error?.localizedMessage ?: "Sign in failed. Please try again"
+                    }
+                    Log.d("FireBaseAuth", "User sign in failed ${task.exception?.message}")
+                    onFailure(Exception(errorMessage))
                 }
             }
 
