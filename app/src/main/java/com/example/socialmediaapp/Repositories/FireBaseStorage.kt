@@ -30,24 +30,25 @@ class FireBaseStorage {
         postsListener()
     }
 
-    fun uploadPost(imageUri: Uri,caption : String) {
-        val imageFileName = "posts/${UUID.randomUUID()}.jpg"
-        val storageRef = storage.reference.child(imageFileName)
+        suspend fun uploadPost(imageUri: Uri, caption: String) {
+            try {
+                val imageFileName = "posts/${UUID.randomUUID()}.jpg"
+                val storageRef = storage.reference.child(imageFileName)
 
-        storageRef.putFile(imageUri)
-            .addOnSuccessListener {
-                storageRef.downloadUrl
-                    .addOnSuccessListener { downloadUrl ->
-                        savePostToDatabase(downloadUrl.toString(),caption)
+                // Ladda upp bilden
+                val uploadTask = storageRef.putFile(imageUri).await()
 
-                    }.addOnFailureListener{ exception ->
-                        Log.d("FireBaseStorage","Failed to save to Database")
-                    }
-            }.addOnFailureListener { exception ->
-                Log.d("FireBaseStorage","$exception")
+                // Hämta nedladdnings-URL
+                val downloadUrl = storageRef.downloadUrl.await()
+
+                // Spara posten i databasen
+                savePostToDatabase(downloadUrl.toString(), caption)
+            } catch (e: Exception) {
+                throw e
             }
-    }
-    private fun savePostToDatabase(imageUrl: String, caption: String) {
+        }
+
+    suspend fun savePostToDatabase(imageUrl: String, caption: String) {
         val postId = UUID.randomUUID().toString()
         val post = hashMapOf(
             "postId" to postId,
@@ -59,13 +60,12 @@ class FireBaseStorage {
             "timestamp" to System.currentTimeMillis()
         )
 
-        db.collection("posts").document(postId).set(post)
-            .addOnSuccessListener {
-                Log.d("FireBaseStorage","Successfully Created Post!")
-            }
-            .addOnFailureListener { exception ->
-                Log.d("FireBaseStorage","$exception")
-            }
+        try {
+            db.collection("posts").document(postId).set(post).await()
+            Log.d("FirebaseStorage", "Successfully created post!")
+        } catch (e: Exception) {
+            Log.e("FirebaseStorage", "Failed to save post to database", e)
+        }
     }
 
     private fun postsListener() {

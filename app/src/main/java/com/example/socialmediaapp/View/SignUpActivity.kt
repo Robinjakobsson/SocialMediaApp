@@ -1,5 +1,6 @@
 package com.example.socialmediaapp.View
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -68,11 +69,20 @@ class SignUpActivity : AppCompatActivity() {
             Toast.makeText(this,"Enter a username!",Toast.LENGTH_SHORT).show()
             return
         }else {
-            binding.loginProgressBar.visibility = View.GONE
-            selectedImageUri?.let { auth.createAccount(email, password, username, it) }
-            Toast.makeText(this, "Account with $username Created!", Toast.LENGTH_SHORT).show()
-            finish()
+
+            selectedImageUri?.let { auth.createAccount(email, password, username, it, onsuccess = {
+                Toast.makeText(this, "Account with $username Created!", Toast.LENGTH_SHORT).show()
+                binding.loginProgressBar.visibility = View.GONE
+                navigateToLoginActivity()
+            }, onFailure = {
+                binding.loginProgressBar.visibility = View.GONE
+                Toast.makeText(this,"Account Was not created",Toast.LENGTH_SHORT).show()
+            }) }
 
         }
+    }
+    fun navigateToLoginActivity(){
+        val newIntent = Intent(this,LoginActivity::class.java)
+        startActivity(newIntent)
     }
 }
