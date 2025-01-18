@@ -30,7 +30,7 @@ class PostViewModel : ViewModel() {
         storage.setupRealTimeListeners()
     }
 
-    fun uploadPost(imageUri: Uri, caption : String) {
+     fun uploadPost(imageUri: Uri, caption : String) {
         viewModelScope.launch {
         storage.uploadPost(imageUri,caption)
         }

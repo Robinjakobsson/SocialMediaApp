@@ -22,7 +22,7 @@ class FireBaseAuth {
         // Skapa en referens för profilbilden i Firebase Storage
         val profileImageRef = storage.reference.child("profile_images/${UUID.randomUUID()}.jpg")
 
-        // Ladda upp bilden till Firebase Storage
+        // Laddar upp bilden till Firebase Storage
         profileImageRef.putFile(imageUri)
             .addOnSuccessListener {
                 // När uppladdningen är klar, hämta downloadUrl
