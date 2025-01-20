@@ -35,13 +35,10 @@ class FireBaseStorage {
                 val imageFileName = "posts/${UUID.randomUUID()}.jpg"
                 val storageRef = storage.reference.child(imageFileName)
 
-                // Ladda upp bilden
                 val uploadTask = storageRef.putFile(imageUri).await()
 
-                // Hämta nedladdnings-URL
                 val downloadUrl = storageRef.downloadUrl.await()
 
-                // Spara posten i databasen
                 savePostToDatabase(downloadUrl.toString(), caption)
             } catch (e: Exception) {
                 throw e
@@ -87,19 +84,15 @@ class FireBaseStorage {
             }
     }
     fun setupRealTimeListeners() {
-        // Hämtar båda Kollektionerna
         val userscollection = db.collection("users")
         val postCollection = db.collection("posts")
 
-        //Lägger till Snapshot Listener på User kollektionen
         userscollection.addSnapshotListener { userSnapshot, error ->
             if (error != null) {
                 error.printStackTrace()
                 return@addSnapshotListener
             }
-            // Gör om alla users till objekt
             val users = userSnapshot?.toObjects(User::class.java)
-
 
             postCollection.addSnapshotListener { postSnapshot, error ->
                 if (error != null) {
@@ -108,10 +101,8 @@ class FireBaseStorage {
                 }
                 val posts = postSnapshot?.toObjects(Post::class.java)
 
-                // Grupperar Posts efter UserId
                 val postsGroupedById = posts?.groupBy { it.userId }
 
-                // Kopplar Ihop User med Post
                 val userWithPostList = users?.map { user ->
                     UserWithPosts(user,posts = postsGroupedById?.get(user.userid) ?: emptyList()
                     )
