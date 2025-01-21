@@ -67,26 +67,43 @@ class FireBaseAuth {
         }
 
     }
-    fun getCurrentUser() = auth.currentUser
-
-    suspend fun uploadProfileImage(imageUri: Uri): String {
-        val profileImageRef = storage.reference.child("profile_images/${UUID.randomUUID()}.jpg")
-        val uploadTask = profileImageRef.putFile(imageUri).await()
-        return profileImageRef.downloadUrl.toString()
+    fun getCurrentUser() : FirebaseUser? {
+        return  auth.currentUser
     }
 
-    suspend fun createFireBaseUser(email: String,password: String): String {
+    fun getUserData(uid: String, onSuccess: (User) -> Unit, onFailure : (Exception) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val user = db.getUserById(uid)
+                withContext(Dispatchers.Main) {
+                    onSuccess(user)
+                }
+            } catch (e : Exception) {
+                withContext(Dispatchers.Main) {
+                    onFailure(e)
+                }
+            }
+        }
+    }
+
+    private suspend fun uploadProfileImage(imageUri: Uri): String {
+        val profileImageRef = storage.reference.child("profile_images/${UUID.randomUUID()}.jpg")
+        val uploadTask = profileImageRef.putFile(imageUri).await()
+        return profileImageRef.downloadUrl.await().toString()
+    }
+
+    private suspend fun createFireBaseUser(email: String, password: String): String {
         val authResult = auth.createUserWithEmailAndPassword(email,password).await()
         return authResult.user?.uid ?: throw Exception("User Creation failed: UID is null")
     }
-    suspend fun saveUserToDatabase(username: String,uid: String,imageUrl : String) {
+    private suspend fun saveUserToDatabase(username: String, uid: String, imageUrl : String) {
         db.addUser(username,uid,imageUrl)
     }
-    suspend fun signInFireBaseUser(email: String,password: String): FirebaseUser {
+    private suspend fun signInFireBaseUser(email: String, password: String): FirebaseUser {
         val authResult = auth.signInWithEmailAndPassword(email,password).await()
         return authResult.user ?: throw Exception("Failed to retrieve User..")
     }
-    fun getSignInErrorMessage(exception: Exception?): String {
+    private fun getSignInErrorMessage(exception: Exception?): String {
         return when (exception) {
             is FirebaseAuthInvalidCredentialsException -> "Invalid email or password"
             is FirebaseAuthUserCollisionException -> "This email is already registered"
