@@ -15,7 +15,7 @@ import java.util.UUID
 
 class FireBaseStorage {
 
-    val storage = Firebase.storage
+    private val storage = Firebase.storage
     private val auth = FireBaseAuth()
     private val db = Firebase.firestore
     private val currentUser = auth.getCurrentUser()
