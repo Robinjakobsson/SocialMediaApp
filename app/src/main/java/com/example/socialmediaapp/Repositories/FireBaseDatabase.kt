@@ -1,6 +1,7 @@
 package com.example.socialmediaapp.Repositories
 
 import android.util.Log
+import com.example.socialmediaapp.Model.Post
 import com.example.socialmediaapp.Model.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore

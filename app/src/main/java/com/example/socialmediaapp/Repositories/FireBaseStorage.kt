@@ -19,16 +19,10 @@ class FireBaseStorage {
     private val auth = FireBaseAuth()
     private val db = Firebase.firestore
     private val currentUser = auth.getCurrentUser()
-
-    private val _posts = MutableLiveData<MutableList<Post>>()
-
-
+    val personalPosts = MutableLiveData<MutableList<Post>>()
     private val _userWithPosts = MutableLiveData<List<UserWithPosts>?>()
     val userWithPosts: MutableLiveData<List<UserWithPosts>?> get() = _userWithPosts
 
-    init {
-        postsListener()
-    }
 
         suspend fun uploadPost(imageUri: Uri, caption: String) {
             try {
@@ -65,24 +59,6 @@ class FireBaseStorage {
         }
     }
 
-    private fun postsListener() {
-        db.collection("posts").addSnapshotListener { snapshot, error ->
-                if (snapshot != null) {
-                    val postsList = mutableListOf<Post>()
-                    for (doc in snapshot.documents) {
-                        val post = doc.toObject(Post::class.java)
-                        if (post != null) {
-                            post.postId = doc.id
-                            postsList.add(post)
-                        }
-                    }
-                    _posts.postValue(postsList)
-                }
-                else {
-                    Log.d("FireBaseStorage","Problem fetching Posts from Database $error")
-                }
-            }
-    }
     fun setupRealTimeListeners() {
         val userscollection = db.collection("users")
         val postCollection = db.collection("posts")
@@ -104,11 +80,32 @@ class FireBaseStorage {
                 val postsGroupedById = posts?.groupBy { it.userId }
 
                 val userWithPostList = users?.map { user ->
-                    UserWithPosts(user,posts = postsGroupedById?.get(user.userid) ?: emptyList()
+                    UserWithPosts(
+                        user, posts = postsGroupedById?.get(user.userid) ?: emptyList()
                     )
                 }
                 _userWithPosts.postValue(userWithPostList)
-                }
             }
         }
+    }
+    fun personalPostsListener(uid : String, onComplete: (MutableList<Post>) -> Unit) {
+        val postRef = db.collection("posts").whereEqualTo("userId", uid)
+        postRef.addSnapshotListener { snapShot, error ->
+            if (error != null) {
+                error.printStackTrace()
+                return@addSnapshotListener
+            }
+            val postsList = mutableListOf<Post>()
+
+            for (doc in snapShot?.documents!!) {
+                val post = doc.toObject(Post::class.java)
+
+                if (post != null) {
+                    postsList.add(post)
+                }
+            }
+            Log.d("FireBaseStorage","Fetched posts : ${postsList.size}")
+            onComplete(postsList)
+        }
+    }
 }

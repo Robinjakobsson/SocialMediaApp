@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 class PostViewModel : ViewModel() {
     private val storage = FireBaseStorage()
 
+    val personalPosts = MutableLiveData<MutableList<Post>>()
+
     private val _postUploadSuccess = MutableLiveData<Boolean>()
     val postUploadSuccess : LiveData<Boolean> get() = _postUploadSuccess
 
@@ -33,6 +35,11 @@ class PostViewModel : ViewModel() {
      fun uploadPost(imageUri: Uri, caption : String) {
         viewModelScope.launch {
         storage.uploadPost(imageUri,caption)
+        }
+    }
+    fun getPersonalPosts(uid : String) {
+        storage.personalPostsListener(uid) { posts ->
+            personalPosts.postValue(posts)
         }
     }
 }
