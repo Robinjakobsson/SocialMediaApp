@@ -47,7 +47,6 @@ class FireBaseAuth {
     }
 
 
-
     fun signIn(email : String, password: String, onsuccess: () -> Unit, onFailure : (Exception) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {

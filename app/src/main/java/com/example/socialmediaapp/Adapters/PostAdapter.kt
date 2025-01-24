@@ -14,7 +14,7 @@ import com.example.socialmediaapp.Model.UserWithPosts
 import com.example.socialmediaapp.R
 
 class PostAdapter(
-    val posts : MutableList<UserWithPosts>,
+    val posts : MutableList<UserWithPosts>
 
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
