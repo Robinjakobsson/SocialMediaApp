@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/logo"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="200dp"
         android:src="@drawable/logo"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
+
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -54,6 +55,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/username_edit_text"
+            android:inputType="text"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/bio">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/biography"
             android:inputType="text"
             />
 

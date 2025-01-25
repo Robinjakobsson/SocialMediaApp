@@ -50,6 +50,7 @@ class SignUpActivity : AppCompatActivity() {
         val email = binding.emailEditText.text.toString()
         val password = binding.passwordEditText.text.toString()
         val username = binding.usernameEditText.text.toString()
+        val bio = binding.biography.text.toString()
 
         binding.loginProgressBar.visibility = View.VISIBLE
 
@@ -70,7 +71,7 @@ class SignUpActivity : AppCompatActivity() {
             return
         }else {
 
-            selectedImageUri?.let { auth.createAccount(email, password, username, it, onsuccess = {
+            selectedImageUri?.let { auth.createAccount(email, password, username, it,bio, onsuccess = {
                 Toast.makeText(this, "Account with $username Created!", Toast.LENGTH_SHORT).show()
                 binding.loginProgressBar.visibility = View.GONE
                 navigateToLoginActivity()

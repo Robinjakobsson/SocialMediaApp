@@ -75,8 +75,7 @@ class ProfileFragment : Fragment() {
     private fun updateUI(user: User) {
         binding?.apply {
             profileName.text = user.username
-            followersCount.text = user.followers
-            followingCount.text = user.follows
+            biography.text = user.biography
             Glide.with(this@ProfileFragment)
                 .load(user.profileImageUrl)
                 .into(profileImage)

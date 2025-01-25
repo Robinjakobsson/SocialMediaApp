@@ -116,13 +116,28 @@
 
             </LinearLayout>
         </LinearLayout>
-        <TextView
-            android:id="@+id/profile_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Robin Jakobsson"
-            android:textStyle="bold"
-            android:layout_marginTop="5dp"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Robin Jakobsson"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"/>
+
+            <TextView
+                android:id="@+id/biography"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="I am a football player"
+                android:textStyle="italic"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/postsRecyclerView"

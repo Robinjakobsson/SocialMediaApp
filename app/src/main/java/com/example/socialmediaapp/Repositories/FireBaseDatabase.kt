@@ -12,8 +12,8 @@ class FireBaseDatabase {
     private val db = Firebase.firestore
 
 
-     suspend fun addUser(userName : String, uid : String, profileImageUrl : String) {
-         val user = User(userName, uid, profileImageUrl)
+     suspend fun addUser(userName : String, uid : String, profileImageUrl : String,bio : String) {
+         val user = User(userName, uid, profileImageUrl,bio)
 
          try {
              db.collection("users")

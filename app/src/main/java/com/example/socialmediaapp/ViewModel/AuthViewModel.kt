@@ -13,8 +13,8 @@ class AuthViewModel : ViewModel() {
 
 
 
-    fun createAccount(email: String, password : String, username : String, imageUri : Uri,onsuccess: () -> Unit,onFailure: (Exception) -> Unit) {
-        auth.createAccount(email,password,username,imageUri,onsuccess,onFailure)
+    fun createAccount(email: String, password : String, username : String, imageUri : Uri,bio : String,onsuccess: () -> Unit,onFailure: (Exception) -> Unit) {
+        auth.createAccount(email,password,username,imageUri,bio,onsuccess,onFailure)
     }
 
     fun signIn(email: String,password: String,onsuccess : () -> Unit, onFailure: (Exception) -> Unit) {
