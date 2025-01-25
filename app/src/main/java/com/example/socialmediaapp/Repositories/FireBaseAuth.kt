@@ -25,14 +25,15 @@ class FireBaseAuth {
     val auth = Firebase.auth
     private val db = FireBaseDatabase()
 
-     fun createAccount(email: String, password: String, username: String, imageUri: Uri, onsuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+
+     fun createAccount(email: String, password: String, username: String, imageUri: Uri,bio : String, onsuccess: () -> Unit, onFailure: (Exception) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
         try {
             uploadProfileImage(imageUri)
 
             val uid = createFireBaseUser(email,password)
 
-            saveUserToDatabase(username,uid,imageUri.toString())
+            saveUserToDatabase(username,uid,imageUri.toString(),bio)
 
             withContext(Dispatchers.Main) {
                 onsuccess()
@@ -95,8 +96,8 @@ class FireBaseAuth {
         val authResult = auth.createUserWithEmailAndPassword(email,password).await()
         return authResult.user?.uid ?: throw Exception("User Creation failed: UID is null")
     }
-    private suspend fun saveUserToDatabase(username: String, uid: String, imageUrl : String) {
-        db.addUser(username,uid,imageUrl)
+    private suspend fun saveUserToDatabase(username: String, uid: String, imageUrl : String,bio : String) {
+        db.addUser(username,uid,imageUrl,bio)
     }
     private suspend fun signInFireBaseUser(email: String, password: String): FirebaseUser {
         val authResult = auth.signInWithEmailAndPassword(email,password).await()

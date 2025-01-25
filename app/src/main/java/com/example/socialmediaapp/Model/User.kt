@@ -9,13 +9,10 @@ data class User(
     val username : String = "",
     val userid : String = "",
     val profileImageUrl : String = "",
-    var followers : String = "",
-    var follows : String = ""
+    var biography : String = ""
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
-        parcel.readString().toString(),
-        parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString()
@@ -26,8 +23,6 @@ data class User(
         parcel.writeString(username)
         parcel.writeString(userid)
         parcel.writeString(profileImageUrl)
-        parcel.writeString(followers)
-        parcel.writeString(follows)
     }
 
     override fun describeContents(): Int {

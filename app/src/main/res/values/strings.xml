@@ -12,4 +12,6 @@
     <string name="upload_post">Upload Post</string>
     <string name="select_image">Select Image</string>
     <string name="profile">Profile</string>
+    <string name="biography">Biography</string>
+    <string name="bio">Bio</string>
 </resources>

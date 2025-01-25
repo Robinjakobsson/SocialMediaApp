@@ -19,7 +19,6 @@ class FireBaseStorage {
     private val auth = FireBaseAuth()
     private val db = Firebase.firestore
     private val currentUser = auth.getCurrentUser()
-    val personalPosts = MutableLiveData<MutableList<Post>>()
     private val _userWithPosts = MutableLiveData<List<UserWithPosts>?>()
     val userWithPosts: MutableLiveData<List<UserWithPosts>?> get() = _userWithPosts
 
